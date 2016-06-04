@@ -17,7 +17,7 @@ endif
 
 if !exists('g:howdoi_map') | let g:howdoi_map = '<c-h>' | en
 
-if !has('python')
+if !has('python') && !has('python3')
   echoerr "Required vim compiled with +python"
     finish
 endif
