@@ -11,14 +11,14 @@
 " ===========================================================================
 
 " Allow the user to disable the plugin & prevent multiple loads
-if exists("g:howdoi")
+if exists('g:howdoi')
     finish
 endif
 
 if !exists('g:howdoi_map') | let g:howdoi_map = '<c-h>' | en
 
-if !has('python') && !has('python3')
-  echoerr "Required vim compiled with +python"
+if !has('python3')
+  echoerr 'Required vim compiled with +python'
     finish
 endif
 
@@ -29,13 +29,13 @@ let g:howdoi = 1
 
 function! s:Howdoi()
 
-python << EOF
+python3 << EOF
 
 import subprocess, vim
 
 howdoi_installed = vim.eval("executable('howdoi')")
 if howdoi_installed == "0":
-  print "Expected howdoi package to be installed"
+  print("Expected howdoi package to be installed")
 
 filetypes = {
   "c" : "c",
@@ -62,11 +62,12 @@ if "vim" not in query and filetype not in query:
 p = subprocess.Popen("howdoi " + query,
   stdout=subprocess.PIPE,
   stderr=subprocess.PIPE,
+  universal_newlines=True,
   shell=True)
-output, errors = p.communicate()
+output, errors = p.communicate(timeout=30)
 
 # Clean up a bit
-lines = filter(None, output.replace('\r', '').split('\n'))
+lines = list(filter(None, output.replace('\r', '').split('\n')))
 
 # Renove the query line
 del vim.current.line
@@ -75,7 +76,7 @@ del vim.current.line
 vim.current.range.append(lines, 0)
 
 # Indent it
-vim.command("normal! " + str(len(lines)) + "==" )
+vim.command("normal! " + repr(len(lines)) + "==" )
 
 EOF
 endfunction
@@ -94,7 +95,7 @@ function! s:CreateMaps(target, desc, combo)
   execute 'noremap <unique> <script> ' . plug . ' :call <SID>' . a:target . '()<CR>'
 
   " Setup default combo
-  if strlen(a:combo) && !exists("no_plugin_maps")
+  if strlen(a:combo) && !exists('no_plugin_maps')
     if !hasmapto(plug)
       execute 'map ' . a:combo . ' ' . plug
     endif
