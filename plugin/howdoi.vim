@@ -11,16 +11,11 @@
 " ===========================================================================
 
 " Allow the user to disable the plugin & prevent multiple loads
-if exists("g:howdoi")
+if exists('g:howdoi')
     finish
 endif
 
 if !exists('g:howdoi_map') | let g:howdoi_map = '<c-h>' | en
-
-if !has('python')
-  echoerr "Required vim compiled with +python"
-    finish
-endif
 
 let g:howdoi = 1
 
@@ -29,55 +24,38 @@ let g:howdoi = 1
 
 function! s:Howdoi()
 
-python << EOF
+    let howdoi_installed = executable('howdoi')
+    if howdoi_installed ==? '0'
+        echomsg 'Expected howdoi package to be installed'
+    endif
 
-import subprocess, vim
+    " identigy list for filetypes
+    let filetypes = {
+    \   'c' : 'c',
+    \   'java' : 'java',
+    \   'cpp' : 'c++',
+    \   'cs' : 'c#',
+    \   'python' : 'python',
+    \   'php' : 'php',
+    \   'javascript' : 'javascript',
+    \   'ruby' : 'ruby',
+    \ }
 
-howdoi_installed = vim.eval("executable('howdoi')")
-if howdoi_installed == "0":
-  print "Expected howdoi package to be installed"
+    let query = getline('.')
 
-filetypes = {
-  "c" : "c",
-  "java" : "java",
-  "cpp" : "c++",
-  "cs" : "c#",
-  "python" : "python",
-  "php" : "php",
-  "javascript" : "javascript",
-  "ruby" : "ruby"
-}
+    " add filetype to query if not already present
+    if (stridx(query, 'vim') < 0) && (stridx(query, &filetype) < 0)
+        if has_key(filetypes, &filetype) > 0
+	    let query += ' in ' . filetypes[&filetype]
+	else
+	    let query += ' in ' + &filetype
+        endif
+    endif
 
-query = vim.current.line
-filetype = vim.eval("&ft")
+    " Call howdoi
+    " TODO: error handling
+    read! 'howdoi ' . query
 
-# add filetype to query if not already present
-if "vim" not in query and filetype not in query:
-  if filetype in filetypes:
-    query += " in " + filetypes[filetype]
-  else:
-    query += " in " + filetype
-
-# Call howdoi, I'm way too lazy
-p = subprocess.Popen("howdoi " + query,
-  stdout=subprocess.PIPE,
-  stderr=subprocess.PIPE,
-  shell=True)
-output, errors = p.communicate()
-
-# Clean up a bit
-lines = filter(None, output.replace('\r', '').split('\n'))
-
-# Renove the query line
-del vim.current.line
-
-# Append the result at the cursor's position
-vim.current.range.append(lines, 0)
-
-# Indent it
-vim.command("normal! " + str(len(lines)) + "==" )
-
-EOF
 endfunction
 
 
@@ -94,7 +72,7 @@ function! s:CreateMaps(target, desc, combo)
   execute 'noremap <unique> <script> ' . plug . ' :call <SID>' . a:target . '()<CR>'
 
   " Setup default combo
-  if strlen(a:combo) && !exists("no_plugin_maps")
+  if strlen(a:combo) && !exists('no_plugin_maps')
     if !hasmapto(plug)
       execute 'map ' . a:combo . ' ' . plug
     endif
@@ -114,4 +92,3 @@ endfunction
 
 " Function name / Menu entry / Default mapping
 call s:CreateMaps('Howdoi', 'howdoi', g:howdoi_map)
-
