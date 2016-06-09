@@ -18,20 +18,12 @@ Install [howdoi][1] if you haven't:
 pip install howdoi
 ```
 
-You must also have vim compiled with +python support. You can check that using the command:
-
-```bash
-vim --version | grep +python
-```
-
-Vim package in Ubuntu and it's derivatives comes with +python support.
-
 # Installation
 
 ## Pathogen
 
 Clone this repository in your `~/.vim/bundle` directory:
- 
+
 ```bash
 git clone https://github.com/laurentgoudet/vim-howdoi.git
 ```
@@ -72,7 +64,7 @@ set runtimepath^=~/.vim/bundle/vim-howdoi
 
 # Troubleshooting
 
-You'll maybe need LXML2 `apt-get install python-lxml` if [howdoi][1] compilation fails. 
+You'll maybe need LXML2 `apt-get install python-lxml` if [howdoi][1] compilation fails.
 
 # License
 
