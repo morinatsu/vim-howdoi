@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo '### start test of vim-howdoi ###'
+echo $*
+echo '### end test of vim-howdoi ###'
