@@ -46,9 +46,9 @@ function! s:Howdoi()
     " add filetype to query if not already present
     if (stridx(query, 'vim') < 0) && (stridx(query, &filetype) < 0)
         if has_key(filetypes, &filetype) > 0
-	    let query += ' in ' . filetypes[&filetype]
+	    let query .= ' in ' . filetypes[&filetype]
 	else
-	    let query += ' in ' + &filetype
+	    let query .= ' in ' . &filetype
         endif
     endif
 
