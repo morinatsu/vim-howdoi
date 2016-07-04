@@ -1,5 +1,7 @@
 # vim-howdoi
 
+[![Build Status](https://travis-ci.org/morinatsu/vim-howdoi.svg?branch=master)](https://travis-ci.org/morinatsu/vim-howdoi)
+
 A Vim frontend for [howdoi][1], the awesome command line tool that lets you ask what you need and grabs the snippet of code from SO.
 
 <img src="https://raw.github.com/laurentgoudet/vim-howdoi/master/vim-howdoi.gif"/>
