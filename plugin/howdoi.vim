@@ -55,6 +55,7 @@ function! s:Howdoi()
     " Call howdoi
     " TODO: error handling
     read! 'howdoi ' . query
+    return system('howdoi ' . query)
 
 endfunction
 
@@ -92,3 +93,8 @@ endfunction
 
 " Function name / Menu entry / Default mapping
 call s:CreateMaps('Howdoi', 'howdoi', g:howdoi_map)
+
+function! howdoi#sid()  "{{{2
+  return maparg('<SID>', 'n')
+endfunction
+nnoremap <SID>  <SID>
